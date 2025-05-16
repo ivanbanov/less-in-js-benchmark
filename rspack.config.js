@@ -1,31 +1,51 @@
 import { experiments, rspack } from "@rspack/core";
 import ReactRefreshPlugin from "@rspack/plugin-react-refresh";
 
-const isProd = process.env.NODE_ENV === "production";
+const isProduction = process.env.NODE_ENV === "production";
 
 export default {
   module: {
-    parser: {
-      "css/auto": {
-        namedExports: false,
-      },
-    },
     rules: [
       {
         test: /\.less$/,
         use: [
-          // "style-loader",
+          {
+            loader: "style-loader",
+            options: {
+              esModule: false,
+            },
+          },
           {
             loader: "css-loader",
             options: {
-              sourceMap: false,
-              modules: true,
+              sourceMap: isProduction,
+              importLoaders: 1,
+              modules: {
+                mode: (resourcePath) => {
+                  if (/\.less$/i.test(resourcePath)) {
+                    return "global";
+                  }
+
+                  if (/\.css$/i.test(resourcePath)) {
+                    return "global";
+                  }
+
+                  return "global";
+                },
+                exportGlobals: true,
+                localIdentName: "[local]-[hash:base64:5]",
+              },
             },
           },
-          "postcss-loader",
-          "less-loader",
+          {
+            loader: "less-loader",
+            options: {
+              lessOptions: {
+                math: "always",
+              },
+            },
+          },
         ],
-        type: "javascript/auto",
       },
       {
         test: /\.tsx?$/,
@@ -38,8 +58,8 @@ export default {
             },
             transform: {
               react: {
-                development: !isProd,
-                refresh: !isProd,
+                development: !isProduction,
+                refresh: !isProduction,
               },
             },
           },
@@ -58,7 +78,4 @@ export default {
       template: "./src/index.html",
     }),
   ],
-  experiments: {
-    css: true,
-  },
 };

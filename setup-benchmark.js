@@ -33,7 +33,7 @@ const lessStyles = `
   background: black;
 }
 
-.box {
+:local(.box) {
   color: @info;
   &.nested {
     .dark();
