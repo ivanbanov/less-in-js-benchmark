@@ -1,0 +1,14 @@
+@info: blue;
+@error: red;
+
+.dark() {
+  background: black;
+}
+
+.box {
+  color: @info;
+  &.nested {
+    .dark();
+    color: @error;
+  }
+}

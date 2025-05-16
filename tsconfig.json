@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es2021",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "removeComments": true,
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitReturns": true,
+    "allowJs": true,
+    "moduleDetection": "force",
+    "useDefineForClassFields": false,
+    "moduleSuffixes": [".d", ""],
+    "lib": ["es2024", "dom", "dom.iterable"],
+    "types": ["@rspack/core/module"],
+    "jsx": "react-jsx",
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["./less.d.ts", "./src"],
+  "exclude": ["**/node_modules", "**/build"]
+}
