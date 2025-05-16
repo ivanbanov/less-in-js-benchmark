@@ -14,7 +14,7 @@
     "css-loader": "^7.1.2",
     "less": "^4.3.0",
     "less-loader": "^12.3.0",
-    "postcss-loader": "^8.1.1",
+    "lodash.merge": "^4.6.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "style-loader": "^4.0.0"

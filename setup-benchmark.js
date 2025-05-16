@@ -26,8 +26,8 @@ export const Benchmark = () => (
 `;
 
 const lessStyles = `
-@info: blue;
-@error: red;
+@info: var(--blue);
+@error: var(--red);
 
 .dark() {
   background: black;

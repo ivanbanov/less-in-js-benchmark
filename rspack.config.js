@@ -1,9 +1,20 @@
-import { experiments, rspack } from "@rspack/core";
+import { rspack } from "@rspack/core";
 import ReactRefreshPlugin from "@rspack/plugin-react-refresh";
+import swcrc from "./.swcrc.json" with { type: "json" };
+import merge from "lodash.merge";
+
+const { $schema, ...swcConfig } = swcrc;
 
 const isProduction = process.env.NODE_ENV === "production";
 
 export default {
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".jsx", ".json", ".html"],
+  },
+  experiments: {
+    futureDefaults: true,
+    css: false,
+  },
   module: {
     rules: [
       {
@@ -21,17 +32,7 @@ export default {
               sourceMap: isProduction,
               importLoaders: 1,
               modules: {
-                mode: (resourcePath) => {
-                  if (/\.less$/i.test(resourcePath)) {
-                    return "global";
-                  }
-
-                  if (/\.css$/i.test(resourcePath)) {
-                    return "global";
-                  }
-
-                  return "global";
-                },
+                mode: "global",
                 exportGlobals: true,
                 localIdentName: "[local]-[hash:base64:5]",
               },
@@ -49,12 +50,20 @@ export default {
       },
       {
         test: /\.tsx?$/,
-        exclude: [/node_modules/],
         loader: "builtin:swc-loader",
-        options: {
+        options: merge(swcConfig, {
           jsc: {
-            parser: {
-              syntax: "typescript",
+            minify: {
+              compress: {
+                defaults: isProduction,
+                global_defs: {
+                  "process.env.NODE_ENV": isProduction
+                    ? "production"
+                    : "development",
+                  __DEV__: !isProduction,
+                  __PROD__: isProduction,
+                },
+              },
             },
             transform: {
               react: {
@@ -63,13 +72,9 @@ export default {
               },
             },
           },
-        },
-        type: "javascript/auto",
+        }),
       },
     ],
-  },
-  resolve: {
-    extensions: [".tsx", ".ts", ".js", ".jsx", ".json", ".html"],
   },
   plugins: [
     // new rspack.CssExtractRspackPlugin({})

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json.schemastore.org/swcrc",
+  "sourceMaps": true,
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": true,
+      "dynamicImport": true,
+      "decorators": true
+    },
+    "preserveAllComments": true,
+    "transform": {
+      "useDefineForClassFields": false,
+      "react": {
+        "runtime": "automatic"
+      }
+    },
+    "loose": false,
+    "externalHelpers": true,
+    "keepClassNames": false
+  },
+  "module": {
+    "type": "es6"
+  },
+  "env": {
+    "mode": "entry",
+    "coreJs": "3.41",
+    "targets": "defaults, ios >= 15.1, chrome >= 96, firefox >= 95, opera >= 82"
+  }
+}

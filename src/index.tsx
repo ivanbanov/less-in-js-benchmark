@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Benchmark } from "./benchmark";
+import "./styles.less";
 
 const App = () => (
   <>
