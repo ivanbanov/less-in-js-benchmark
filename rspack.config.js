@@ -1,4 +1,5 @@
-import { rspack } from "@rspack/core";
+import { rspack, SwcJsMinimizerRspackPlugin } from "@rspack/core";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 import ReactRefreshPlugin from "@rspack/plugin-react-refresh";
 import swcrc from "./.swcrc.json" with { type: "json" };
 import merge from "lodash.merge";
@@ -8,6 +9,7 @@ const { $schema, ...swcConfig } = swcrc;
 const isProduction = process.env.NODE_ENV === "production";
 
 export default {
+  mode: isProduction ? "production" : "development",
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".jsx", ".json", ".html"],
   },
@@ -20,12 +22,14 @@ export default {
       {
         test: /\.less$/,
         use: [
-          {
-            loader: "style-loader",
-            options: {
-              esModule: false,
-            },
-          },
+          process.env.CSS === "extract"
+            ? rspack.CssExtractRspackPlugin.loader
+            : {
+                loader: "style-loader",
+                options: {
+                  esModule: false,
+                },
+              },
           {
             loader: "css-loader",
             options: {
@@ -76,10 +80,45 @@ export default {
       },
     ],
   },
+  optimization: {
+    chunkIds: isProduction ? "deterministic" : "named",
+    moduleIds: isProduction ? "deterministic" : "named",
+    providedExports: isProduction,
+    sideEffects: isProduction,
+    usedExports: isProduction,
+    concatenateModules: isProduction,
+    runtimeChunk: isProduction && {
+      name: (entrypoint) => `runtime~${entrypoint.name}`,
+    },
+    removeAvailableModules: isProduction,
+    removeEmptyChunks: isProduction,
+    realContentHash: isProduction,
+    minimize: isProduction,
+    minimizer: [
+      new SwcJsMinimizerRspackPlugin({
+        minimizerOptions: {
+          format: {
+            comments: false,
+            ecma: 2021,
+          },
+        },
+      }),
+    ],
+
+    innerGraph: false, //isProduction,
+    mangleExports: isProduction,
+  },
+  devtool: false,
   plugins: [
-    // new rspack.CssExtractRspackPlugin({})
-    new ReactRefreshPlugin(),
-    new rspack.HtmlRspackPlugin({
+    new rspack.CssExtractRspackPlugin({}),
+    new ReactRefreshPlugin({ exclude: /node_modules/ }),
+    new HtmlWebpackPlugin({
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        minifyCSS: true,
+      },
+      scriptLoading: "blocking",
       template: "./src/index.html",
     }),
   ],

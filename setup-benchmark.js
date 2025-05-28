@@ -3,9 +3,11 @@ import path from "path";
 
 const directoryPath = "./src/components";
 
+const singelCSS = process.env.SINGLE_CSS === "true";
+
 const boxTemplate = (i) => `
 import React from 'react'
-import styles from './styles-${i}.less'
+import styles from './styles${singelCSS ? "" : "-" + i}.less'
 
 export const Box${i} = () => (
   <div className={styles.box}>
@@ -35,7 +37,7 @@ const lessStyles = `
 
 :local(.box) {
   color: @info;
-  &.nested {
+  & .nested {
     .dark();
     color: @error;
   }
@@ -48,13 +50,20 @@ if (fs.existsSync(directoryPath)) {
 
 fs.mkdirSync(directoryPath);
 
-for (let i = 1; i <= 2; i++) {
+if (singelCSS) {
+  fs.writeFileSync(path.join(directoryPath, `styles.less`), lessStyles);
+}
+
+console.log(process.env.BOX);
+for (let i = 1; i <= (process.env.BOX ?? 2000); i++) {
   fs.writeFileSync(
     path.join(directoryPath, `box-${i}.tsx`),
     boxTemplate(i).trim(),
   );
 
-  fs.writeFileSync(path.join(directoryPath, `styles-${i}.less`), lessStyles);
+  if (!singelCSS) {
+    fs.writeFileSync(path.join(directoryPath, `styles-${i}.less`), lessStyles);
+  }
 
   benchmarkTemplate = benchmarkTemplate
     .replace(/(\s+)(\{\/\*\s)(.*?)(#i)(.*>).*/, `$&$1$3${i}$5`)
