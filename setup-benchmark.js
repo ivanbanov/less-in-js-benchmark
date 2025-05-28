@@ -54,7 +54,6 @@ if (singelCSS) {
   fs.writeFileSync(path.join(directoryPath, `styles.less`), lessStyles);
 }
 
-console.log(process.env.BOX);
 for (let i = 1; i <= (process.env.BOX ?? 2000); i++) {
   fs.writeFileSync(
     path.join(directoryPath, `box-${i}.tsx`),

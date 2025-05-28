@@ -1,8 +1,0 @@
-import React from 'react'
-import styles from './styles-36221.less'
-
-export const Box36221 = () => (
-  <div className={styles.box}>
-    <div className={styles.nested}>Box 36221</div>
-  </div>
-);

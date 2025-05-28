@@ -1,15 +1,17 @@
 {
   "name": "less-in-js-benchmark",
   "scripts": {
-    "dev": "rspack dev",
+    "dev": "npm setup && rspack dev",
     "setup": "node setup-benchmark.js",
-    "build-benchmark": "time BOX=100000 npm run build-inline-css",
     "build-extract-css": "npm run setup && NODE_ENV=production CSS=extract rspack build",
     "build-inline-css": "npm run setup && NODE_ENV=production rspack build",
-    "build-optimize-css": "npm run setup && SINGLE_CSS=true npm run build-extract-css",
-    "preview-extract-css": "npm run setup && npm run build-extract-css && rspack preview",
-    "preview-inline-css": "npm run setup && npm run build-inline-css && rspack preview",
-    "preview-optimized-css": "npm run setup && npm run build-optimize-css && rspack preview"
+    "build-optimize-css": "SINGLE_CSS=true npm run build-extract-css",
+    "preview-extract-css": "npm run build-extract-css && rspack preview",
+    "preview-inline-css": "npm run build-inline-css && rspack preview",
+    "preview-optimize-css": "npm run build-optimize-css && rspack preview",
+    "benchmark-extract-css": "time BOX=50000 npm run build-inline-css",
+    "benchmark-inline-css": "time BOX=50000 npm run build-extract-css",
+    "benchmark-optimize-css": "time BOX=50000 npm run build-optimize-css"
   },
   "type": "module",
   "dependencies": {
